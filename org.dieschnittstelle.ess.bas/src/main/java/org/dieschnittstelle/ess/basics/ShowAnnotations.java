@@ -4,6 +4,10 @@ package org.dieschnittstelle.ess.basics;
 import org.dieschnittstelle.ess.basics.annotations.AnnotatedStockItemBuilder;
 import org.dieschnittstelle.ess.basics.annotations.StockItemProxyImpl;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+
 import static org.dieschnittstelle.ess.utils.Utils.*;
 
 public class ShowAnnotations {
@@ -29,16 +33,39 @@ public class ShowAnnotations {
 	 * TODO BAS2
 	 */
 	private static void showAttributes(Object instance) {
-		show("class is: " + instance.getClass());
-
 		try {
-
 			// TODO BAS2: create a string representation of instance by iterating
 			//  over the object's attributes / fields as provided by its class
 			//  and reading out the attribute values. The string representation
 			//  will then be built from the field names and field values.
 			//  Note that only read-access to fields via getters or direct access
 			//  is required here.
+
+			StringBuilder builder = new StringBuilder("{");
+
+			Class klass = instance.getClass();
+			String klassName = klass.getSimpleName();
+			builder.append(klassName).append(" ");
+
+            Field[] fields = klass.getDeclaredFields();
+			for (Field field : fields) {
+				String name = field.getName();
+				String getterName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                builder.append(" ").append(field.getName()).append(":");
+				Method getter = klass.getDeclaredMethod(getterName);
+                // invoke the setter
+				Object value = getter.invoke(instance);
+                builder.append(value);
+
+                // check if field is the last field of the fields array
+                if (field != fields[fields.length - 1]) {
+                    builder.append(",");
+                }
+			}
+
+            builder.append("}");
+            System.out.println(builder);
+
 
 			// TODO BAS3: if the new @DisplayAs annotation is present on a field,
 			//  the string representation will not use the field's name, but the name

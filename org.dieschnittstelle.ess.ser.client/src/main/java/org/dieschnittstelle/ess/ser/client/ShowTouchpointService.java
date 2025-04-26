@@ -1,13 +1,19 @@
 package org.dieschnittstelle.ess.ser.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.entities.crm.AbstractTouchpoint;
@@ -34,7 +40,7 @@ public class ShowTouchpointService {
 	 * the http client that can be used for accessing the service on tomcat - note that we are usying an async client here
 	 */
 	private CloseableHttpAsyncClient client;
-	
+
 	/**
 	 * the attribute that controls whether we are running through (when called from the junit test) or not
 	 */
@@ -102,7 +108,7 @@ public class ShowTouchpointService {
 
 	/**
 	 * read all touchpoints
-	 * 
+	 *
 	 * @return
 	 */
 	public List<AbstractTouchpoint> readAllTouchpoints() {
@@ -168,7 +174,7 @@ public class ShowTouchpointService {
 
 	/**
 	 * TODO SER4
-	 * 
+	 *
 	 * @param tp
 	 */
 	public void deleteTouchpoint(AbstractTouchpoint tp) {
@@ -176,18 +182,32 @@ public class ShowTouchpointService {
 
 		createClient();
 
+		try {
+			HttpDelete delete = new HttpDelete("http://localhost:8080/api/touchpoints/" + tp.getId());
+			Future<HttpResponse> responseFuture = client.execute(delete, null);
+			HttpResponse response = responseFuture.get();
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				show("deleteTouchpoint(): done. ");
+			} else {
+				show("deleteTouchpoint(): could not delete: " + response.getStatusLine().getStatusCode());
+			}
+		} catch (Exception e) {
+			logger.error("got exception: " + e, e);
+			throw new RuntimeException(e);
+		}
+
 		logger.debug("client running: {}",client.isRunning());
 
 	}
 
 	/**
 	 * TODO SER3
-	 * 
+	 *
 	 * fuer das Schreiben des zu erzeugenden Objekts als Request Body siehe die
 	 * Hinweise auf:
 	 * http://stackoverflow.com/questions/10146692/how-do-i-write-to
 	 * -an-outpustream-using-defaulthttpclient
-	 * 
+	 *
 	 * @param tp
 	 */
 	public AbstractTouchpoint createNewTouchpoint(AbstractTouchpoint tp) {
@@ -200,20 +220,35 @@ public class ShowTouchpointService {
 		try {
 
 			// create post request for the api/touchpoints uri
+			HttpPost post = new HttpPost("http://localhost:8080/api/touchpoints");
 
 			// create an ObjectOutputStream from a ByteArrayOutputStream - the
 			// latter must be accessible via a variable
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
 
 			// write the object to the output stream
+			oos.writeObject(tp);
 
 			// create a ByteArrayEntity and pass it the byte array from the
 			// output stream
+			ByteArrayEntity bae = new ByteArrayEntity(bos.toByteArray());
 
 			// set the entity on the request
+			post.setEntity(bae);
 
 			// execute the request, which will return a Future<HttpResponse> object
+			Future<HttpResponse> responseFuture = client.execute(post, null);
 
 			// get the response from the Future object
+			HttpResponse httpResponse = responseFuture.get();
+			show("createNewTouchpoint(): completed: " + httpResponse);
+			if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                ObjectInputStream ois = new ObjectInputStream(httpResponse.getEntity().getContent());
+                AbstractTouchpoint receivedTp = (AbstractTouchpoint) ois.readObject();
+                show("createNewTouchpoint(): completed: " + receivedTp);
+                return receivedTp;
+			}
 
 			// log the status line
 
@@ -237,7 +272,7 @@ public class ShowTouchpointService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param stepwise
 	 */
 	public void setStepwise(boolean stepwise) {
