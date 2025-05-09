@@ -176,7 +176,31 @@ public class ShowTouchpointService {
 
 		createClient();
 
-		logger.debug("client running: {}",client.isRunning());
+		logger.debug("client running: {}", client.isRunning());
+
+		try {
+			// Build the DELETE request with the touchpoint id in the URL
+			String url = "http://localhost:8080/api/touchpoints/" + tp.getId();
+			org.apache.http.client.methods.HttpDelete delete = new org.apache.http.client.methods.HttpDelete(url);
+
+			// Execute the request
+			Future<HttpResponse> responseFuture = client.execute(delete, null);
+			HttpResponse response = responseFuture.get();
+
+			// Check the response status
+			int status = response.getStatusLine().getStatusCode();
+			if (status == HttpStatus.SC_OK) {
+				logger.info("Touchpoint deleted successfully.");
+			} else if (status == HttpStatus.SC_NOT_FOUND) {
+				logger.warn("Touchpoint not found for deletion.");
+			} else {
+				logger.error("Failed to delete touchpoint. Status: " + status);
+				throw new RuntimeException("Delete failed, status: " + status);
+			}
+		} catch (Exception e) {
+			logger.error("Exception during deleteTouchpoint: " + e, e);
+			throw new RuntimeException(e);
+		}
 
 	}
 

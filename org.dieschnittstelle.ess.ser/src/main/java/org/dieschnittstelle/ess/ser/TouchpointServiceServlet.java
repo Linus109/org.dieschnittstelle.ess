@@ -88,5 +88,36 @@ public class TouchpointServiceServlet extends HttpServlet {
 	 * TODO: SER4 server-side implementation of deleteTouchpoint
 	 */
 
+	@Override
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
+	    logger.info("doDelete()");
 
+	    try {
+	        // Get the executor
+	        TouchpointCRUDExecutor exec = (TouchpointCRUDExecutor) getServletContext()
+	                .getAttribute("touchpointCRUD");
+
+	        // Extract id from URL: /touchpoints/{id}
+	        String pathInfo = request.getPathInfo(); // e.g. "/5"
+	        if (pathInfo == null || pathInfo.length() <= 1) {
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            return;
+	        }
+	        String idStr = pathInfo.substring(1); // remove leading slash
+	        long id = Long.parseLong(idStr);
+
+	        // Delete the touchpoint
+	        boolean deleted = exec.deleteTouchpoint(id);
+
+	        // Set response status
+	        if (deleted) {
+	            response.setStatus(HttpServletResponse.SC_OK);
+	        } else {
+	            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        }
+	    } catch (Exception e) {
+	        logger.error("Exception in doDelete: " + e, e);
+	        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    }
+	}
 }
