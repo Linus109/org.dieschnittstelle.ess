@@ -1,6 +1,13 @@
 package org.dieschnittstelle.ess.jrs;
 
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
+import org.dieschnittstelle.ess.entities.GenericCRUDExecutor;
+import jakarta.servlet.ServletContext;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.NotFoundException;
+import org.apache.logging.log4j.Logger;
+import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
+
 
 import java.util.List;
 
@@ -9,37 +16,40 @@ import java.util.List;
  */
 
 public class ProductCRUDServiceImpl implements IProductCRUDService {
+    private GenericCRUDExecutor<AbstractProduct> crudExecutor;
 
-	@Override
-	public IndividualisedProductItem createProduct(
-			IndividualisedProductItem prod) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public ProductCRUDServiceImpl(@Context ServletContext servletContext) {
+        this.crudExecutor = (GenericCRUDExecutor<AbstractProduct>) servletContext.getAttribute("productCRUD");
+    }
 
-	@Override
-	public List<IndividualisedProductItem> readAllProducts() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public IndividualisedProductItem createProduct(IndividualisedProductItem prod) {
+        return (IndividualisedProductItem) this.crudExecutor.createObject(prod);
+    }
 
-	@Override
-	public IndividualisedProductItem updateProduct(long id,
-			IndividualisedProductItem update) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<IndividualisedProductItem> readAllProducts() {
+        return (List<IndividualisedProductItem>) (List<?>) this.crudExecutor.readAllObjects();
+    }
 
-	@Override
-	public boolean deleteProduct(long id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public IndividualisedProductItem updateProduct(long id, IndividualisedProductItem update) {
+        return (IndividualisedProductItem) this.crudExecutor.updateObject(update);
+    }
 
-	@Override
-	public IndividualisedProductItem readProduct(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+    @Override
+    public boolean deleteProduct(long id) {
+        return this.crudExecutor.deleteObject(id);
+    }
+
+    @Override
+    public IndividualisedProductItem readProduct(long id) {
+    	IndividualisedProductItem product = (IndividualisedProductItem) this.crudExecutor.readObject(id);
+    	if (product == null) {
+    		throw new NotFoundException("Product with id " + id + " not found.");
+    	}
+    	return product;
+    }
+   
 }
