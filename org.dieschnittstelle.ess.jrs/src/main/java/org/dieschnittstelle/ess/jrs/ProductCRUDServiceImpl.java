@@ -1,6 +1,6 @@
 package org.dieschnittstelle.ess.jrs;
 
-import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
+import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 import org.dieschnittstelle.ess.entities.GenericCRUDExecutor;
 import jakarta.servlet.ServletContext;
 import jakarta.ws.rs.core.Context;
@@ -23,19 +23,19 @@ public class ProductCRUDServiceImpl implements IProductCRUDService {
     }
 
     @Override
-    public IndividualisedProductItem createProduct(IndividualisedProductItem prod) {
-        return (IndividualisedProductItem) this.crudExecutor.createObject(prod);
+    public AbstractProduct createProduct(AbstractProduct prod) {
+        return (AbstractProduct) this.crudExecutor.createObject(prod);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<IndividualisedProductItem> readAllProducts() {
-        return (List<IndividualisedProductItem>) (List<?>) this.crudExecutor.readAllObjects();
+    public List<AbstractProduct> readAllProducts() {
+        return (List<AbstractProduct>) (List<?>) this.crudExecutor.readAllObjects();
     }
 
     @Override
-    public IndividualisedProductItem updateProduct(long id, IndividualisedProductItem update) {
-        return (IndividualisedProductItem) this.crudExecutor.updateObject(update);
+    public AbstractProduct updateProduct(long id, AbstractProduct update) {
+        return (AbstractProduct) this.crudExecutor.updateObject(update);
     }
 
     @Override
@@ -44,8 +44,8 @@ public class ProductCRUDServiceImpl implements IProductCRUDService {
     }
 
     @Override
-    public IndividualisedProductItem readProduct(long id) {
-    	IndividualisedProductItem product = (IndividualisedProductItem) this.crudExecutor.readObject(id);
+    public AbstractProduct readProduct(long id) {
+    	AbstractProduct product = (AbstractProduct) this.crudExecutor.readObject(id);
     	if (product == null) {
     		throw new NotFoundException("Product with id " + id + " not found.");
     	}
