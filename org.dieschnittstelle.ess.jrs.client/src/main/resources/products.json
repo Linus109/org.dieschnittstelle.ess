@@ -1,0 +1,10 @@
+[
+  {
+    "@class": "org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem",
+    "productType": "ROLL",
+    "expirationAfterStocked": 720,
+    "name": "Schusterjunge",
+    "id": 1,
+    "price": 0
+  }
+]
