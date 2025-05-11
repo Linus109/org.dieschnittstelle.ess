@@ -1,6 +1,7 @@
 package org.dieschnittstelle.ess.jrs;
 
 import jakarta.ws.rs.*;
+import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 
 import java.util.List;
@@ -26,15 +27,14 @@ import java.util.List;
 public interface IProductCRUDService {
 
 	@POST
-	public IndividualisedProductItem createProduct(IndividualisedProductItem prod);
+	public AbstractProduct createProduct(AbstractProduct prod);
 
 	@GET
-	public List<IndividualisedProductItem> readAllProducts();
+	public List<AbstractProduct> readAllProducts();
 
 	@PUT
 	@Path("/{productsId}")
-	public IndividualisedProductItem updateProduct(@PathParam("productsId") long id,
-												   IndividualisedProductItem update);
+	public AbstractProduct updateProduct(@PathParam("productsId") long id, AbstractProduct update);
 
 	@DELETE
 	@Path("/{productsId}")
@@ -42,6 +42,6 @@ public interface IProductCRUDService {
 
 	@GET
 	@Path("/{productsId}")
-	public IndividualisedProductItem readProduct(@PathParam("productsId") long id);
+	public AbstractProduct readProduct(@PathParam("productsId") long id);
 			
 }

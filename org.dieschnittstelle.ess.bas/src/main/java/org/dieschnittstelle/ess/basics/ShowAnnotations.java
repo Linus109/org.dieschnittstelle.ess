@@ -43,15 +43,18 @@ public class ShowAnnotations {
 
 			StringBuilder builder = new StringBuilder("{");
 
-			Class klass = instance.getClass();
-			String klassName = klass.getSimpleName();
+			Class<?> klass = instance.getClass();
+			DisplayAs classAnnotation = klass.getAnnotation(DisplayAs.class);
+			String klassName = classAnnotation != null ? classAnnotation.value() : klass.getSimpleName();
 			builder.append(klassName).append(" ");
 
             Field[] fields = klass.getDeclaredFields();
 			for (Field field : fields) {
-				String name = field.getName();
-				String getterName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
-                builder.append(" ").append(field.getName()).append(":");
+				String fieldName = field.getName();
+				DisplayAs fieldAnnotation = field.getAnnotation(DisplayAs.class);
+				String displayName = fieldAnnotation != null ? fieldAnnotation.value() : fieldName;
+				builder.append(displayName).append(":");
+				String getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 				Method getter = klass.getDeclaredMethod(getterName);
                 // invoke the setter
 				Object value = getter.invoke(instance);
@@ -59,7 +62,7 @@ public class ShowAnnotations {
 
                 // check if field is the last field of the fields array
                 if (field != fields[fields.length - 1]) {
-                    builder.append(",");
+                    builder.append(", ");
                 }
 			}
 

@@ -1,10 +1,12 @@
 package org.dieschnittstelle.ess.basics.annotations.stockitemtypes;
 
+import org.dieschnittstelle.ess.basics.DisplayAs;
 import org.dieschnittstelle.ess.basics.annotations.Initialise;
 import org.dieschnittstelle.ess.basics.annotations.Brandname;
 import org.dieschnittstelle.ess.basics.annotations.StockItem;
 import org.dieschnittstelle.ess.basics.annotations.Units;
 
+@DisplayAs("Milk")
 @StockItem
 public class Milch {
 
@@ -12,6 +14,7 @@ public class Milch {
 	private int menge;
 
 	@Brandname
+	@DisplayAs("brand")
 	private String markenname;
 
 	public int getMenge() {
