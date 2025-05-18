@@ -1,0 +1,5 @@
+Simon Benedict (109753)
+Linus Waldowsky (104966)
+
+Die Textdatei, die für Aufgabe JRS2 abgegeben werden sollte befindet sich unter
+./org.dieschnittstelle.ess.jrs.client/src/main/resources/products.txt
