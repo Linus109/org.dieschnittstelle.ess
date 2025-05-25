@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.lang.reflect.Type;
+import java.lang.annotation.Annotation;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -210,17 +211,45 @@ public class JSONObjectMapper {
 
 				// create a new instance of the class
 				Object obj = null;
+				Class actualClass = (Class) type;
 
 				// check whether we have an abstract class that has jsontype
 				// info present
-				if (Modifier.isAbstract(((Class) type).getModifiers())) {
+
+				if (Modifier.isAbstract(actualClass.getModifiers())) {
 					// TODO: include a handling for abstract classes considering
 					// the JsonTypeInfo annotation that might be set on type
-					throw new ObjectMappingException(
-							"cannot instantiate abstract class: " + type);
-				} else {
-					obj = ((Class) type).newInstance();
+					Annotation[] annotations = actualClass.getAnnotations();
+					JsonTypeInfo typeInfo = null;
+					
+					for (Annotation annotation : annotations) {
+						if (annotation instanceof JsonTypeInfo) {
+							typeInfo = (JsonTypeInfo) annotation;
+							break;
+						}
+					}
+					
+					if (typeInfo != null) {
+						if (typeInfo.include() == JsonTypeInfo.As.PROPERTY
+								&& typeInfo.use() == JsonTypeInfo.Id.CLASS) {
+							
+							String typePropertyName = typeInfo.property();
+							JsonNode typeNode = ((ObjectNode) json).get(typePropertyName);
+							
+							if (typeNode != null && typeNode instanceof TextNode) {
+								String concreteClassName = ((TextNode) typeNode).textValue();
+								actualClass = Class.forName(concreteClassName);
+							} else {
+								throw new ObjectMappingException("Abstract class " + actualClass.getName() + 
+									" requires type information in JSON property '" + typePropertyName + "'");
+							}
+						}
+					} else {
+						throw new ObjectMappingException("Cannot instantiate abstract class: " + actualClass);
+					}
 				}
+				
+				obj = actualClass.newInstance();
 
 				// iterate over the fields in the json object and invoke the
 				// corresponding setter on the instance
@@ -235,7 +264,7 @@ public class JSONObjectMapper {
 								.substring(0, 1).toUpperCase()
 								+ currentJsonField.substring(1);
 						// get the getter and determine its return type
-						Method currentBeanFieldGetter = ((Class) type)
+						Method currentBeanFieldGetter = actualClass
 								.getMethod("get" + capitalisedFieldname,
 										new Class[] {});
 						Class currentBeanFieldClass = currentBeanFieldGetter
@@ -260,7 +289,7 @@ public class JSONObjectMapper {
 
 							try {
 								// invoke the setter method
-								Method currentBeanFieldSetter = ((Class) type)
+								Method currentBeanFieldSetter = actualClass
 										.getMethod(
 												"set" + capitalisedFieldname,
 												new Class[] { currentBeanFieldClass });
@@ -285,7 +314,7 @@ public class JSONObjectMapper {
 										// determine the class of the element
 										Object firstElement = valueit.next();
 										// we will add element-by-element
-										Method currentBeanFieldAdder = ((Class) type)
+										Method currentBeanFieldAdder = actualClass
 												.getMethod(
 														"add"
 																+ capitalisedFieldname

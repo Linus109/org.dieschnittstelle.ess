@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.entities.crm.StationaryTouchpoint;
 import org.dieschnittstelle.ess.entities.GenericCRUDExecutor;
 
+@Path("/touchpoints")
 public class TouchpointCRUDServiceImpl implements ITouchpointCRUDService {
 
     protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(TouchpointCRUDServiceImpl.class);
@@ -69,5 +70,18 @@ public class TouchpointCRUDServiceImpl implements ITouchpointCRUDService {
     /*
      * UE JRS1: implement the method for updating touchpoints
      */
-
+    @Override
+    public StationaryTouchpoint updateTouchpoint(long id, StationaryTouchpoint touchpoint) {
+        logger.info("updateTouchpoint(): updating touchpoint with id " + id);
+        
+        touchpoint.setId(id);
+        
+        StationaryTouchpoint updatedTouchpoint = (StationaryTouchpoint) this.touchpointCRUD.updateObject(touchpoint);
+        
+        if (updatedTouchpoint != null) {
+            return updatedTouchpoint;
+        } else {
+            throw new NotFoundException("The touchpoint with id " + id + " does not exist and cannot be updated!");
+        }
+    }
 }
