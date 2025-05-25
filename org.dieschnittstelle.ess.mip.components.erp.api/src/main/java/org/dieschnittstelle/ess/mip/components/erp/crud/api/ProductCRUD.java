@@ -5,24 +5,39 @@ import java.util.List;
 import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 import org.dieschnittstelle.ess.entities.erp.Campaign;
 
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+
 /*
  * TODO MIP+JPA1/2/5:
  * this interface shall be implemented using an ApplicationScoped CDI bean with an EntityManager.
  * See TouchpointCRUDImpl for an example bean with a similar scope of functionality
  */
 
+@Path("products")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public interface ProductCRUD {
 
+	@POST
 	public AbstractProduct createProduct(AbstractProduct prod);
 
+	@GET
 	public List<AbstractProduct> readAllProducts();
 
+	@PUT
 	public AbstractProduct updateProduct(AbstractProduct update);
 
-	public AbstractProduct readProduct(long productID);
+	@GET
+	@Path("{productID}")
+	public AbstractProduct readProduct(@PathParam("productID") long productID);
 
-	public boolean deleteProduct(long productID);
+	@DELETE
+	@Path("{productID}")
+	public boolean deleteProduct(@PathParam("productID") long productID);
 
-	public List<Campaign> getCampaignsForProduct(long productID);
+	@GET
+	@Path("{productID}/campaigns")
+	public List<Campaign> getCampaignsForProduct(@PathParam("productID") long productID);
 
 }
