@@ -56,47 +56,6 @@
         <module name="lib-entities-crm" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8">
-      <module name="build-jsf" target="1.8" />
-      <module name="build-jws" target="1.8" />
-      <module name="build-mip (1)" target="1.5" />
-      <module name="build-mip-tomee" target="1.8" />
-      <module name="demo-bas" target="1.8" />
-      <module name="demo-build-ejb" target="1.8" />
-      <module name="demo-build-jrs" target="1.8" />
-      <module name="demo-build-jws" target="1.8" />
-      <module name="demo-ejb-client" target="1.8" />
-      <module name="demo-ejb-earapp" target="1.8" />
-      <module name="demo-ejb-ejbmodule-crm" target="1.8" />
-      <module name="demo-ejb-ejbmodule-erp" target="1.8" />
-      <module name="demo-jrs-api" target="1.8" />
-      <module name="demo-jrs-client" target="1.8" />
-      <module name="demo-jrs-webapp" target="1.8" />
-      <module name="demo-jws-client" target="1.8" />
-      <module name="demo-jws-webapp" target="1.8" />
-      <module name="demo-lib-entities-crm" target="1.8" />
-      <module name="demo-lib-entities-erp" target="1.8" />
-      <module name="demo-ser-client" target="1.8" />
-      <module name="demo-ser-runnable" target="1.8" />
-      <module name="demo-ser-webapp" target="1.8" />
-      <module name="demo-ue-add2" target="1.8" />
-      <module name="demo-wsv-client" target="1.8" />
-      <module name="jsf-cdi-webapp" target="1.8" />
-      <module name="jsf-webapp" target="1.8" />
-      <module name="jws-client" target="1.8" />
-      <module name="jws-webapp" target="1.8" />
-      <module name="mip-app (1)" target="1.8" />
-      <module name="mip-app-wildfly" target="11" />
-      <module name="mip-components-crm (1)" target="1.5" />
-      <module name="mip-components-erp (1)" target="1.8" />
-      <module name="mip-ms-erp" target="1.8" />
-      <module name="mip-ms-shared-webapp-crm" target="1.8" />
-      <module name="mip-ms-shopping" target="1.8" />
-      <module name="ue-add2" target="1.8" />
-      <module name="ue-add3" target="1.8" />
-      <module name="ue-jsf5" target="1.8" />
-      <module name="ue-jws4" target="1.8" />
-      <module name="ue-jws5" target="1.8" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="8" />
   </component>
 </project>
