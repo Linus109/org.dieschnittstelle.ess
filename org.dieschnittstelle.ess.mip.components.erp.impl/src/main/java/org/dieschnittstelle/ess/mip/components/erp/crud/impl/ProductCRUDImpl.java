@@ -1,4 +1,4 @@
-package org.dieschnittstelle.ess.mip.components.crm.crud.impl;
+package org.dieschnittstelle.ess.mip.components.erp.crud.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
