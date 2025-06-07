@@ -53,6 +53,7 @@ public class ProductCRUDImpl implements ProductCRUD {
 
     @Override
     public boolean deleteProduct(long productID) {
+        // TODO: first use id to read product
         return false;
     }
 
