@@ -53,12 +53,18 @@ public class ProductCRUDImpl implements ProductCRUD {
 
     @Override
     public boolean deleteProduct(long productID) {
-        // TODO: first use id to read product
+        AbstractProduct product = em.find(AbstractProduct.class, productID);
+        if (product != null) {
+            em.remove(product);
+            return true;
+        }
         return false;
     }
 
     @Override
     public List<Campaign> getCampaignsForProduct(long productID) {
-        return List.of();
+        show("getCampaignsForProduct() in IMPL: " + productID);
+        Query query = em.createQuery("SELECT DISTINCT c FROM Campaign c JOIN c.bundles b JOIN b.product p where p.id = " + productID);
+        return query.getResultList();
     }
 }
