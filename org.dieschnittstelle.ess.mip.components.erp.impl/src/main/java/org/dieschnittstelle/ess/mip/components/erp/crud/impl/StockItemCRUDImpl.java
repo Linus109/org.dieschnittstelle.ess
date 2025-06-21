@@ -49,15 +49,13 @@ public class StockItemCRUDImpl implements StockItemCRUD {
 
 	@Override
 	public List<StockItem> readStockItemsForProduct(IndividualisedProductItem prod) {
-		Query query = entityManager.createQuery("SELECT si FROM StockItem si WHERE si.product.id = :prodID");
-		query.setParameter("prodID", prod.getId());
+		Query query = entityManager.createQuery("SELECT si FROM StockItem si WHERE si.product.id = " + prod.getId());
 		return query.getResultList();
 	}
 
 	@Override
 	public List<StockItem> readStockItemsForPointOfSale(PointOfSale pos) {
-		Query query = entityManager.createQuery("SELECT si FROM StockItem si WHERE si.pos.id = :posID");
-		query.setParameter("posID", pos.getId());
+		Query query = entityManager.createQuery("SELECT si FROM StockItem si WHERE si.pos.id = " + pos.getId());
 		return query.getResultList();
 	}
 
