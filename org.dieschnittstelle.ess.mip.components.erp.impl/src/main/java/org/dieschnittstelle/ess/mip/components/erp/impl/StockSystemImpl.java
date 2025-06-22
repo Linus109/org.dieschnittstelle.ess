@@ -11,10 +11,7 @@ import org.dieschnittstelle.ess.mip.components.erp.crud.api.PointOfSaleCRUD;
 import org.dieschnittstelle.ess.mip.components.erp.crud.impl.StockItemCRUD;
 import org.dieschnittstelle.ess.utils.interceptors.Logged;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.dieschnittstelle.ess.utils.Utils.show;
@@ -64,7 +61,8 @@ public class StockSystemImpl implements StockSystem {
 
         PointOfSale pos = posCRUD.readPointOfSale(pointOfSaleId);
         return stockItemCRUD.readStockItemsForPointOfSale(pos).stream()
-                .map(StockItem::getProduct).collect(Collectors.toList());
+                .map(StockItem::getProduct)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -93,14 +91,12 @@ public class StockSystemImpl implements StockSystem {
     public int getTotalUnitsOnStock(IndividualisedProductItem product) {
         show("StockSystemImpl getTotalUnitsOnStock");
 
-        int totalUnits = 0;
-        for (PointOfSale poi : posCRUD.readAllPointsOfSale()) {
-            StockItem stockItem = stockItemCRUD.readStockItem(product, poi);
-            if (stockItem != null) {
-                totalUnits += stockItem.getUnits();
-            }
-        }
-        return totalUnits;
+        return posCRUD.readAllPointsOfSale()
+                .stream()
+                .map(poi -> stockItemCRUD.readStockItem(product, poi))
+                .filter(Objects::nonNull)
+                .mapToInt(StockItem::getUnits)
+                .sum();
     }
 
     @Override
