@@ -6,6 +6,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 import org.dieschnittstelle.ess.entities.erp.Campaign;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 /*
  * TODO MIP+JPA1/2/5:
@@ -13,6 +14,7 @@ import org.dieschnittstelle.ess.entities.erp.Campaign;
  * See TouchpointCRUDImpl for an example bean with a similar scope of functionality
  */
 
+@RegisterRestClient
 @Path( "/products")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

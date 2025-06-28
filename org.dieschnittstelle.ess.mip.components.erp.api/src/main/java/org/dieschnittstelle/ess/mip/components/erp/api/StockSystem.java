@@ -3,7 +3,6 @@ package org.dieschnittstelle.ess.mip.components.erp.api;
 import java.util.List;
 
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
-import org.dieschnittstelle.ess.entities.erp.StockItem;
 
 public interface StockSystem {
 
