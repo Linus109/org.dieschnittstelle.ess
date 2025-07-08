@@ -1,7 +1,10 @@
 package org.dieschnittstelle.ess.mip.components.erp.impl;
 
+import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptor;
 import jakarta.transaction.Transactional;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 import org.dieschnittstelle.ess.entities.erp.PointOfSale;
@@ -10,6 +13,7 @@ import org.dieschnittstelle.ess.mip.components.erp.api.StockSystem;
 import org.dieschnittstelle.ess.mip.components.erp.crud.api.PointOfSaleCRUD;
 import org.dieschnittstelle.ess.mip.components.erp.crud.impl.StockItemCRUD;
 import org.dieschnittstelle.ess.utils.interceptors.Logged;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import java.util.*;
 import java.util.stream.Collectors;

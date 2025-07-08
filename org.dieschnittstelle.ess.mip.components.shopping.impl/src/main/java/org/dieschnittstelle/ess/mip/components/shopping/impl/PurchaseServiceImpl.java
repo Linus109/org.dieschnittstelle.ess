@@ -17,7 +17,7 @@ import org.dieschnittstelle.ess.mip.components.crm.api.CampaignTracking;
 import org.dieschnittstelle.ess.mip.components.crm.api.CustomerTracking;
 import org.dieschnittstelle.ess.mip.components.crm.api.TouchpointAccess;
 import org.dieschnittstelle.ess.mip.components.crm.crud.api.CustomerCRUD;
-import org.dieschnittstelle.ess.mip.components.erp.api.StockSystem;
+import org.dieschnittstelle.ess.mip.components.erp.api.StockSystemService;
 import org.dieschnittstelle.ess.mip.components.erp.crud.api.ProductCRUD;
 import org.dieschnittstelle.ess.mip.components.shopping.api.PurchaseService;
 import org.dieschnittstelle.ess.mip.components.shopping.api.ShoppingException;
@@ -119,15 +119,15 @@ public class PurchaseServiceImpl implements PurchaseService {
     private ProductCRUD productCRUD;
 
     @Inject
-    private StockSystem stockSystem;
+    private StockSystemService stockSystemService;
 
     private void removeFromStockIfPossible(IndividualisedProductItem product, int removeCount) {
-        int totalCount = stockSystem.getUnitsOnStock(product, touchpoint.getErpPointOfSaleId());
+        int totalCount = stockSystemService.getUnitsOnStock(product.getId(), touchpoint.getErpPointOfSaleId());
         if (removeCount > totalCount) {
             show("To many units. Can't remove " + removeCount + " units for product with name: " + product.getName());
             return;
         }
-        stockSystem.removeFromStock(product, touchpoint.getErpPointOfSaleId(), removeCount);
+        stockSystemService.removeFromStock(product.getId(), touchpoint.getErpPointOfSaleId(), removeCount);
     }
 
     /*

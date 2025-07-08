@@ -2,7 +2,11 @@ package org.dieschnittstelle.ess.mip.components.erp.api;
 
 import java.util.List;
 
+import jakarta.annotation.Priority;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.interceptor.Interceptor;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 public interface StockSystem {
 
